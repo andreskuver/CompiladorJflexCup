@@ -13,9 +13,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author arturo
- */
+
 public class EjemploCUP {
 
     public final static int GENERAR = 1;
@@ -39,10 +37,7 @@ public class EjemploCUP {
             System.out.print("Opcion: ");
             valor = in.nextInt();
             switch (valor) {
-                /*  Generamos el analizador lexico y sintactico.
-                 lcalc.flex contiene la definicion del analizador lexico
-                 ycalc.cup contiene la definicion del analizador sintactico
-                 */
+                
                 case GENERAR: {
                     System.out.println("\n*** Generando ***\n");
                     String archLexico = "";
