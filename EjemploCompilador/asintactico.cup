@@ -1,0 +1,146 @@
+ 
+   
+/* ---------------Seccion de declaraciones preliminares--------------------*/
+package ejemplocup;
+
+/* Import the class java_cup.runtime.*  */
+import java_cup.runtime.*;
+import java.io.FileReader;
+
+parser code {:
+    
+    /* Reporte de error encontrado. */
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Error");
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {                
+                m.append(" in line "+(s.left+1));
+                if (s.right >= 0)
+                    m.append(", column "+(s.right+1));
+            }
+        }
+		if("#3".equals(info.toString())){
+                message=("Expresión de SUMA repetida o SIN NUMERO O VARIABLE AL INICIO");
+            }
+        if("#2".equals(info.toString())){
+                message=("Expresión SIN NUMERO O VARIABLE AL FINAL");
+            }
+        if("#8".equals(info.toString())){
+                message=("Error en la VARIABLE");
+            }
+        if("#5".equals(info.toString())){
+                message=("Expresión de MULTIPLICACIÓN repetida o SIN NUMERO O VARIABLE AL INICIO");
+            }
+        if("#4".equals(info.toString())){
+                message=("Expresión de RESTA repetida o SIN NUMERO O VARIABLE AL INICIO");
+            }
+        if("#6".equals(info.toString())){
+                message=("Expresión de DIVISIÓN repetida o SIN NUMERO O VARIABLE AL INICIO");
+            }
+        if("#7".equals(info.toString())){
+                message=("Expresión de IGUALDAD repetida o SIN NUMERO O VARIABLE AL INICIO");
+            }
+        m.append(" : "+message);
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        //report_error(message, info);
+        //System.exit(1);
+    }
+
+
+:};
+   
+
+   
+/* ------------Declaracion de simbolos terminales y no terminales---------- */
+   
+
+terminal           PYC, SUMA, RESTA, MULT, DIV, IGUAL;
+terminal String		ID, INT;
+   
+
+non terminal Object     expr_list, expr_part;
+non terminal String		variable, expr, termino;
+   
+
+
+/* ------------------- Seccion de la gramatica ------------------------ */
+   
+    expr_list ::= expr_list expr_part
+                  |
+                  expr_part
+                  ;
+   
+   expr_part ::= expr:e PYC
+                  {:
+				  System.out.println("");
+                  :} 
+                 ;
+                  
+
+   expr      ::=  expr:e SUMA variable:v
+                  {:
+				  if(e!=null){
+				  System.out.print(e+" MAS "+v);
+				  }else{System.out.print(" MAS "+v);}
+                  :}
+                  |
+                  expr:e RESTA variable:v
+                  {:
+                    if(e!=null){
+				  System.out.print(e+" MENOS "+v);
+				  }else{
+				  System.out.print(" MENOS "+v);}
+                  :}
+				  |
+				  expr:e MULT variable:v
+                  {:
+                    if(e!=null){
+				  System.out.print(e+" MULTIPLICADO POR "+v);
+				  }else{
+				  System.out.print(" MULTIPLICADO POR "+v);}
+                  :}
+                  |
+				  expr:e DIV variable:v
+                  {:
+                    if(e!=null){
+				  System.out.print(e+" DIVIDIDO PARA "+v);
+				  }else{
+				  System.out.print(" DIVIDIDO PARA "+v);}
+                  :}
+				  |
+				  expr:e IGUAL variable:v
+                  {:
+                    if(e!=null){
+				  System.out.print(e+" ES IGUAL A "+v);
+				  }else{
+				  System.out.print(" ES IGUAL A "+v);}
+                  :}
+                  |
+                  variable:n
+                  {:
+                    RESULT = n;
+                  :}
+                  ;
+
+
+				  
+variable       ::=  ID:i
+				  {:
+                    RESULT = i;
+                  :}
+				  |
+				  termino:t
+				  {:
+                    RESULT = t;
+                  :}
+				;
+				  
+termino       ::=  INT:e
+                  {:
+                    RESULT = e;
+                  :}
+                  ; 
